@@ -23,8 +23,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import com.example.cinqouplus.jeu.Score;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,15 +32,13 @@ import java.util.List;
 
 */
 
-
-/* On va dessiner un carré qui peut se déplacer grâce à une translation via l'écran tactile */
-
 public class MyGLSurfaceView extends GLSurfaceView {
 
     /* Un attribut : le renderer (GLSurfaceView.Renderer est une interface générique disponible) */
     /* MyGLRenderer va implémenter les méthodes de cette interface */
 
     private MyGLRenderer mRenderer;
+    private MyGLSurfaceViewNext surfaceViewNext;
     private Vibrator vibrator;
 
     public MyGLSurfaceView(Context context) {
@@ -53,8 +49,9 @@ public class MyGLSurfaceView extends GLSurfaceView {
         super(context, attrs);
     }
 
-    public void init(Vibrator vibrator){
+    public void init(Vibrator vibrator, MyGLSurfaceViewNext viewNext){
         this.vibrator = vibrator;
+        this.surfaceViewNext = viewNext;
 
         setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         // Création d'un context OpenGLES 3.0
@@ -66,7 +63,6 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
         // Option pour indiquer qu'on redessine uniquement si les données changent
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-        //MyGLSurfaceViewNext.draw();
     }
 
     public MyGLRenderer getmRenderer() {
@@ -74,9 +70,8 @@ public class MyGLSurfaceView extends GLSurfaceView {
     }
 
     /* pour gérer la translation */
-    private float mPreviousX;
-    private float mPreviousY;
     private boolean condition = false;
+    private boolean fini = false;
 
     /* Comment interpréter les événements sur l'écran tactile */
     @Override
@@ -84,18 +79,6 @@ public class MyGLSurfaceView extends GLSurfaceView {
         // Les coordonnées du point touché sur l'écran
         float x = e.getX();
         float y = e.getY();
-
-        // la taille de l'écran en pixels
-        float screen_x = getWidth();
-        float screen_y = getHeight();
-
-        // Des messages si nécessaires
-        /*
-        Log.d("message", "x"+Float.toString(x));
-        Log.d("message", "y"+Float.toString(y));
-        Log.d("message", "screen_x="+Float.toString(screen_x));
-        Log.d("message", "screen_y="+Float.toString(screen_y));*/
-
 
         /* accès aux paramètres du rendu (cf MyGLRenderer.java)
         soit la position courante du centre du carré
@@ -122,6 +105,7 @@ public class MyGLSurfaceView extends GLSurfaceView {
         Log.d("message","test_square="+Boolean.toString(test_square));
         Log.d("message","condition="+Boolean.toString(condition));
 
+        // Les cases de ma grille sont initialiser ici, en fonction de ou l'on touche dans la view, on voit dans quelle case on est
         boolean test_1 = ((x_opengl > pos[0]-8.4) && (x_opengl < pos[0]-6.5) && (y_opengl > pos[1]+7.1) && (y_opengl < pos[1]+9.1));
         boolean test_2 = ((x_opengl > pos[0]-6.5) && (x_opengl < pos[0]-4.7) && (y_opengl > pos[1]+7.1) && (y_opengl < pos[1]+9.1));
         boolean test_3 = ((x_opengl > pos[0]-4.7) && (x_opengl < pos[0]-2.8) && (y_opengl > pos[1]+7.1) && (y_opengl < pos[1]+9.1));
@@ -214,25 +198,36 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
         List<Boolean> test = new ArrayList<>(Arrays.asList(test_1, test_2, test_3, test_4, test_5, test_6, test_7, test_8, test_9, test_10, test_11, test_12, test_13, test_14, test_15, test_16, test_17, test_18, test_19, test_20, test_21, test_22, test_23, test_24, test_25, test_26, test_27, test_28, test_29, test_30, test_31, test_32, test_33, test_34, test_35, test_36, test_37, test_38, test_39, test_40, test_41, test_42, test_43, test_44, test_45, test_46, test_47, test_48, test_49, test_50, test_51, test_52, test_53, test_54, test_55, test_56, test_57, test_58, test_59, test_60, test_61, test_62, test_63, test_64, test_65, test_66, test_67, test_68, test_69, test_70, test_71, test_72, test_73, test_74, test_75, test_76, test_77, test_78, test_79, test_80, test_81));
 
-        if (this.mRenderer.getJeu().estDemarrer() && (test_1 || test_2 || test_3 || test_4 || test_5 || test_6 || test_7 || test_8 || test_9 || test_10 || test_11 || test_12 || test_13 || test_14 || test_15 || test_16 || test_17 || test_18 || test_19 || test_20 || test_21 || test_22 || test_23 || test_24 || test_25 || test_26 || test_27 || test_28 || test_29 || test_30 || test_31 || test_32 || test_33 || test_34 || test_35 || test_36 || test_37 || test_38 || test_39 || test_40 || test_41 || test_42 || test_43 || test_44 || test_45 || test_46 || test_47 || test_48 || test_49 || test_50 || test_51 || test_52 || test_53 || test_54 || test_55 || test_56 || test_57 || test_58 || test_59 || test_60 || test_61 || test_62 || test_63 || test_64 || test_65 || test_66 || test_67 || test_68 || test_69 || test_70 || test_71 || test_72 || test_73 || test_74 || test_75 || test_76 || test_77 || test_78 || test_79 || test_80 || test_81)) {
-            for(int i = 0; i < test.size(); i++) {
+        if (this.mRenderer.getJeu().estDemarrer() || (test_1 || test_2 || test_3 || test_4 || test_5 || test_6 || test_7 || test_8 || test_9 || test_10 || test_11 || test_12 || test_13 || test_14 || test_15 || test_16 || test_17 || test_18 || test_19 || test_20 || test_21 || test_22 || test_23 || test_24 || test_25 || test_26 || test_27 || test_28 || test_29 || test_30 || test_31 || test_32 || test_33 || test_34 || test_35 || test_36 || test_37 || test_38 || test_39 || test_40 || test_41 || test_42 || test_43 || test_44 || test_45 || test_46 || test_47 || test_48 || test_49 || test_50 || test_51 || test_52 || test_53 || test_54 || test_55 || test_56 || test_57 || test_58 || test_59 || test_60 || test_61 || test_62 || test_63 || test_64 || test_65 || test_66 || test_67 || test_68 || test_69 || test_70 || test_71 || test_72 || test_73 || test_74 || test_75 || test_76 || test_77 || test_78 || test_79 || test_80 || test_81)) {
+            for (int i = 0; i < test.size(); i++) {
                 if (test.get(i) && this.mRenderer.getJeu().getmGrille().isGeo(i)) {
-                    Log.d("yo", "yo yo " + i + this.mRenderer.getJeu().getmGrille().isGeo(i));
                     this.mRenderer.getJeu().setDerniereCaseTouche(i);
                     this.mRenderer.getJeu().setCondition(true);
                 }
             }
             if (e.getAction() == MotionEvent.ACTION_UP && this.mRenderer.getJeu().getCondition()) {
-                for(int i = 0; i < test.size(); i++) {
+                for (int i = 0; i < test.size(); i++) {
                     if (test.get(i) && !this.mRenderer.getJeu().getmGrille().isGeo(i)) {
-                        if(this.mRenderer.getJeu().getmGrille().deplacement(i)) {
+                        if (this.mRenderer.getJeu().siDeplacement(this.mRenderer.getJeu().getDerniereCaseTouche(), i)) {
                             this.mRenderer.getJeu().getmGrille().faireDeplacment(mRenderer.getJeu().getCases(), this.mRenderer.getJeu().getDerniereCaseTouche(), i);
                             this.mRenderer.getJeu().pendantDeplacement();
-                            boolean b = this.mRenderer.getJeu().siDeplacement(this.mRenderer.getJeu().getDerniereCaseTouche(),i);
-                            Log.d("le deplacement possible", String.valueOf(b));
+
                             this.mRenderer.getJeu().enleverLigne(i);
                             this.mRenderer.getJeu().setCondition(false);
-                            Log.d("score", String.valueOf(mRenderer.getJeu().getScore().getScore()));
+                            int score = mRenderer.getJeu().getScore().getScore();
+                            OpenGLES30Activity.setTextScore(score);
+
+                            //création de surfaceViewNext pour afficher les nouvelles formes sur une autre view
+                            int[] prochaineBille = mRenderer.getJeu().getProchaineBille();
+                            surfaceViewNext.bille(prochaineBille);
+                            surfaceViewNext.onTouchEvent(e);
+                            OpenGLES30Activity.setNext(this.surfaceViewNext);
+
+                            if(this.mRenderer.getJeu().getEstTermine()) {
+                                this.mRenderer.getJeu().setEstDemarrer(false);
+                                this.fini = true;
+                                OpenGLES30Activity.setTextFini();
+                            }
                             this.requestRender();
                         }
                     }
@@ -241,30 +236,14 @@ public class MyGLSurfaceView extends GLSurfaceView {
         }else {
             vibrator.vibrate(100);
             Log.d("partie pas commencé", "vibration");
+            this.requestRender();
         }
         return true;
     }
 
     public void startGrille () {
         this.mRenderer.startGrille();
+        surfaceViewNext.bille(mRenderer.getJeu().getProchaineBille());
         this.requestRender();
     }
-
-
-
-    public void clignotementErreur () {
-        for(int i = 0; i < 2; i++) {
-            try {
-                this.mRenderer.getJeu().setPlateauColors(.87f,.43f,.08f);
-                requestRender();
-                Thread.sleep(250);
-                this.mRenderer.getJeu().setPlateauColors(.87f,.43f,.08f);
-                requestRender();
-                Thread.sleep(250);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
 }

@@ -28,8 +28,6 @@ import com.example.cinqouplus.jeu.Jeu;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
-    private static final String TAG = "MyGLRenderer";
-
     private Jeu jeu;
 
     // Les matrices habituelles Model/View/Projection
@@ -63,10 +61,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         /* on utilise une classe Matrix (similaire à glm) pour définir nos matrices P, V et M*/
 
         /*Si on souhaite positionner une caméra mais ici on n'en a pas besoin*/
-        //Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
-         /* Pour le moment on va utiliser une projection orthographique
-           donc View = Identity
-         */
         Matrix.setIdentityM(mViewMatrix,0);
 
         // Calculate the projection and view transformation
@@ -77,21 +71,12 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         /* Pour définir une translation on donne les paramètres de la translation
         et la matrice (ici mModelMatrix) est multipliée par la translation correspondante
          */
-        //Matrix.translateM(mModelMatrix, 0, mSquarePosition[0], mSquarePosition[1], 0);
-        //Matrix.translateM(mModelMatrix, 0, mSquarePosition2[0], mSquarePosition2[1], 0);
         Matrix.translateM(mModelMatrix, 0, 0, 0, 0);
-
-        //Matrix.translateM(mModelMatrix, 0, mSquarePosition2[0], mSquarePosition2[1], 0);
-        //Matrix.translateM(mModelMatrix, 0, 0, 0, 0);
 
         /* scratch est la matrice PxVxM finale */
         Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mModelMatrix, 0);
 
-        /* on appelle la méthode dessin du carré élémentaire */
-        //mSquare.draw(scratch);
-        //mSquare2.draw(scratch);
         jeu.dessinerJeu(scratch);
-        //carre.draw(scratch);
     }
 
     /* équivalent au Reshape en OpenGLSL */
@@ -110,7 +95,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         float top = smaller == height ? 10.0f : 10.0f * ratio;
         float bottom = smaller == height ? -10.0f : -10.0f * ratio;
 
-        //Matrix.orthoM(mProjectionMatrix, 0, -10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 1.0f);
         Matrix.orthoM(mProjectionMatrix, 0, left, right, bottom, top, -1.0f, 1.0f);
 
     }

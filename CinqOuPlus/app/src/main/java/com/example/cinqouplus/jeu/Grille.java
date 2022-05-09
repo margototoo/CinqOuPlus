@@ -1,65 +1,16 @@
 package com.example.cinqouplus.jeu;
 
-import android.util.Log;
-
 import com.example.cinqouplus.geometrie.Geometrie;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class Grille implements Cloneable{
     private List<Geometrie> grille;
     private List<Geometrie> next;
-    private List<Geometrie> lignes;
-    private final int nbLignes;
 
     public Grille(List<Geometrie> liste) {
-        ArrayList<float[]> lines = new ArrayList<>(Arrays.asList(
-                new float[]{-9.0f, -9.f, 0.0f,
-                        -9.f, 9.f, 0.0f},
-                new float[]{-7.0f, -9.f, 0.0f,
-                        -7.f, 9.f, 0.0f},
-                new float[]{-5.0f, -9.f, 0.0f,
-                        -5.f, 9.f, 0.0f},
-                new float[]{-3.0f, -9.f, 0.0f,
-                        -3.f, 9.f, 0.0f},
-                new float[]{-1.0f, -9.f, 0.0f,
-                        -1.f, 9.f, 0.0f},
-                new float[]{1.0f, -9.f, 0.0f,
-                        1.f, 9.f, 0.0f},
-                new float[]{3.0f, -9.f, 0.0f,
-                        3.f, 9.f, 0.0f},
-                new float[]{5.0f, -9.f, 0.0f,
-                        5.f, 9.f, 0.0f},
-                new float[]{7.0f, -9.f, 0.0f,
-                        7.f, 9.f, 0.0f},
-                new float[]{9.0f, -9.f, 0.0f,
-                        9.f, 9.f, 0.0f},
-
-                new float[]{9.0f, 9.f, 0.0f,
-                        -9.f, 9.f, 0.0f},
-                new float[]{9.0f, 7.f, 0.0f,
-                        -9.f, 7.f, 0.0f},
-                new float[]{9.0f, 5.f, 0.0f,
-                        -9.f, 5.f, 0.0f},
-                new float[]{9.0f, 3.f, 0.0f,
-                        -9.f, 3.f, 0.0f},
-                new float[]{9.0f, 1.f, 0.0f,
-                        -9.f, 1.f, 0.0f},
-                new float[]{9.0f, -1.f, 0.0f,
-                        -9.f, -1.f, 0.0f},
-                new float[]{9.0f, -3.f, 0.0f,
-                        -9.f, -3.f, 0.0f},
-                new float[]{9.0f, -5.f, 0.0f,
-                        -9.f, -5.f, 0.0f},
-                new float[]{9.0f, -7.f, 0.0f,
-                        -9.f, -7.f, 0.0f},
-                new float[]{9.0f, -9.f, 0.0f,
-                        -9.f, -9.f, 0.0f}));
-
-        this.nbLignes = 9;
         this.grille = liste;
         this.next = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -73,8 +24,7 @@ public class Grille implements Cloneable{
     }
 
     // Changer la forme qui est à l'emplacement demandé
-    private void setGeo (int ligne, int colonne, Geometrie geo) {
-        //this.grille.set(ligne + nbLignes + colonne, geo);
+    private void setGeo (int ligne, Geometrie geo) {
         this.grille.set(ligne, geo);
     }
 
@@ -82,30 +32,18 @@ public class Grille implements Cloneable{
         return this.next;
     }
 
-    // savoir si le déplacement est possible
-    public boolean deplacement (int lignes) {
-        return true;
-    }
-
     // retourner vrai si il y a une forme géométrique dans cette emplacement
     public boolean isGeo (int lignes) {
-        if (grille.get(lignes) == null)
-            return false;
-        return true;
+        return grille.get(lignes) != null;
     }
 
     public void faireDeplacment (ArrayList<float[]> cases, int deplacementSource, int deplacementDestination) {
         Geometrie source = this.getGeo(deplacementSource);
-        this.setGeo(deplacementSource, 0, null);
-        this.setGeo(deplacementDestination, 0, source);
+        this.setGeo(deplacementSource, null);
+        this.setGeo(deplacementDestination, source);
 
         float[] pos = cases.get(deplacementDestination);
         source.set_position(pos);
-        Log.d("forme", String.valueOf(this.grille.get(deplacementSource)));
-    }
-
-    public void prochaineVague() {
-
     }
 
     public int[] prochaineBille() {
@@ -136,16 +74,13 @@ public class Grille implements Cloneable{
                 geo.draw(scratch);
             }
         }
-        for (Geometrie geome: this.next) {
-            if (geome != null )
-                geome.draw(scratch);
-        }
     }
 
     public void dessinerGeoNext (float[] scratch) {
         for (Geometrie geome: this.next) {
-            if (geome != null )
+            if (geome != null ) {
                 geome.draw(scratch);
+            }
         }
     }
 

@@ -1,7 +1,6 @@
 package com.example.cinqouplus.geometrie;
 
 import android.opengl.GLES30;
-import android.util.Log;
 
 import com.example.cinqouplus.MyGLRenderer;
 
@@ -114,6 +113,28 @@ public class Octogone implements Geometrie{
 
     private final float Position[] = {0.0f,0.0f};
 
+    public Octogone(float[] Pos, float[] coords, float red, float green, float blue) {
+
+        this.initOctoCoords = coords;
+        this.octoCoords = coords;
+
+        // positionnnement de la forme en fonction du paramètre du constructeur et de sa position initial
+        // avec le repère du milieu l'écran
+        Position[0] = Pos[0];
+        Position[1] = Pos[1];
+        for (int i = 0; i < octoCoords.length-1; i+=3) {
+            octoCoords[i] = initOctoCoords[i] + Position[0];
+            octoCoords[i+1] = initOctoCoords[i+1] + Position[1];
+        }
+
+        // Mise en place de la couleur du losange
+        for (int i = 0; i < octoColors.length-1; i+=4) {
+            octoColors[i] = red;
+            octoColors[i+1] = green;
+            octoColors[i+2] = blue;
+        }
+    }
+
     public Octogone(float[] Pos, float red, float green, float blue) {
 
         // positionnnement de la forme en fonction du paramètre du constructeur et de sa position initial
@@ -144,7 +165,6 @@ public class Octogone implements Geometrie{
             octoCoords[i] = initOctoCoords[i] + pos[0];
             octoCoords[i+1] = initOctoCoords[i+1] + pos[1];
         }
-        Log.d("deplacement", "pos[0]= "+pos[0]+" ,pos[1]= "+pos[1]);
         Position[0]=pos[0];
         Position[1]=pos[1];
     }
@@ -153,10 +173,7 @@ public class Octogone implements Geometrie{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Octogone octogone = (Octogone) o;
-        Log.d("equals triangle", "Il se passe un truc par ici???");
         return Arrays.equals(initOctoCoords, octogone.initOctoCoords);
-        //return Float[].compare(triangleCoords, triangle.triangleCoords) == 0
-        //return Arrays.equals(initTriangleCoords, triangle.initTriangleCoords) && Arrays.equals(triangleCoords, triangle.triangleCoords) && Arrays.equals(triangleColors, triangle.triangleColors) && Arrays.equals(Indices, triangle.Indices);
     }
 
     public void draw(float[] mvpMatrix) {

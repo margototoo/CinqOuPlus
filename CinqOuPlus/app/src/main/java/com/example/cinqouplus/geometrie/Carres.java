@@ -1,8 +1,6 @@
 package com.example.cinqouplus.geometrie;
 
-import android.opengl.GLES20;
 import android.opengl.GLES30;
-import android.util.Log;
 
 import com.example.cinqouplus.MyGLRenderer;
 
@@ -11,7 +9,6 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class Carres implements Geometrie {
 
@@ -98,6 +95,27 @@ public class Carres implements Geometrie {
 
     private final float Position[] = {0.0f,0.0f};
 
+    public Carres(float[] Pos, float[] coords, float red, float green, float blue) {
+
+        this.initSquareCoords = coords;
+        this.squareCoords = coords;
+
+        // positionnnement de la forme en fonction du paramètre du constructeur et de sa position initial
+        // avec le repère du milieu l'écran
+        this.Position[0] = Pos[0];
+        this.Position[1] = Pos[1];
+        for (int i = 0; i < squareCoords.length-1; i+=3) {
+            squareCoords[i] = initSquareCoords[i] + this.Position[0];
+            squareCoords[i+1] = initSquareCoords[i+1] + this.Position[1];
+        }
+        // Mise en place de la couleur du Plateau (carré mais plus gros)
+        for (int i = 0; i < squareColors.length-1; i+=4) {
+            squareColors[i] = red;
+            squareColors[i+1] = green;
+            squareColors[i+2] = blue;
+        }
+    }
+
     public Carres(float[] Pos, float red, float green, float blue) {
 
         // positionnnement de la forme en fonction du paramètre du constructeur et de sa position initial
@@ -121,10 +139,7 @@ public class Carres implements Geometrie {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Carres carres = (Carres) o;
-        Log.d("equals triangle", "Il se passe un truc par ici???");
         return Arrays.equals(initSquareCoords, carres.initSquareCoords);
-        //return Float[].compare(triangleCoords, triangle.triangleCoords) == 0
-        //return Arrays.equals(initTriangleCoords, triangle.initTriangleCoords) && Arrays.equals(triangleCoords, triangle.triangleCoords) && Arrays.equals(triangleColors, triangle.triangleColors) && Arrays.equals(Indices, triangle.Indices);
     }
 
     public void set_position(float[] pos) {
@@ -132,8 +147,6 @@ public class Carres implements Geometrie {
             squareCoords[i] = initSquareCoords[i] + pos[0];
             squareCoords[i+1] = initSquareCoords[i+1] + pos[1];
         }
-        Log.d("deplacement", "pos[0]= "+pos[0]+" ,pos[1]= "+pos[1]);
-//        Log.d("deplacement", Arrays.toString(squareCoords));
         Position[0]=pos[0];
         Position[1]=pos[1];
     }

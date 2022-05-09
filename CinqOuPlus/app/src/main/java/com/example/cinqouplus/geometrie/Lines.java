@@ -2,7 +2,6 @@ package com.example.cinqouplus.geometrie;
 
 import android.opengl.GLES20;
 import android.opengl.GLES30;
-import android.util.Log;
 
 import com.example.cinqouplus.MyGLRenderer;
 
@@ -44,57 +43,17 @@ public class Lines implements Geometrie{
     float LineCoords[] = {
             -9.0f, 9.0f, 0.0f,
             -9.0f, -9.0f, 0.0f
-    };/*
-
-    float InitLineCoords[] = {
-            -9.0f, 9.0f, 0.0f,
-            -9.0f, -9.0f, 0.0f
-    };*/
-    //float LineCoords[];
+    };
     
     private final int VertexCount = LineCoords.length / COORDS_PER_VERTEX;
     private final int VertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
     // Set color with red, green, blue and alpha (opacity) values
-    //float color[] = { 0.93f, 0.93f, 0.93f, 1.0f };
     float color[] = { 0.f, 0.f, 0.f, 1.5f };
 
     private final float Position[] = {0.0f,0.0f};
 
-    //float[] LineCoords
     public Lines() {
-        //this.LineCoords = LineCoords;
-        /*Position[0] = Pos[0];
-        Position[1] = Pos[1];
-
-        for (int i = 0; i < LineCoords.length-1; i+=3) {
-            LineCoords[i] = InitLineCoords[i] + Position[0];
-            LineCoords[i+1] = InitLineCoords[i+1] + Position[1];
-        }*/
-
-        // initialize vertex byte buffer for shape coordinates
-        /*ByteBuffer bb = ByteBuffer.allocateDirect(
-                LineCoords.length * 4);
-        bb.order(ByteOrder.nativeOrder());
-        VertexBuffer = bb.asFloatBuffer();
-        VertexBuffer.put(this.LineCoords);
-        VertexBuffer.position(0);*/
-
-        // initialisation du buffer pour les couleurs (4 octets par float)
-        /*ByteBuffer bc = ByteBuffer.allocateDirect(this.color.length * 4);
-        bc.order(ByteOrder.nativeOrder());
-        this.colorBuffer = bc.asFloatBuffer();
-        this.colorBuffer.put(this.color);
-        this.colorBuffer.position(0);
-
-        int vertexShader = MyGLRenderer.loadShader(GLES30.GL_VERTEX_SHADER, this.VertexShaderCode);
-        int fragmentShader = MyGLRenderer.loadShader(GLES30.GL_FRAGMENT_SHADER, this.FragmentShaderCode);
-
-        GlProgram = GLES30.glCreateProgram();             // create empty OpenGL ES Program
-        GLES30.glAttachShader(GlProgram, vertexShader);   // add the vertex shader to program
-        GLES30.glAttachShader(GlProgram, fragmentShader); // add the fragment shader to program
-        GLES30.glLinkProgram(GlProgram);                  // creates OpenGL ES program executables
-        GLES30.glGetProgramiv(this.GlProgram, GLES20.GL_LINK_STATUS, linkStatus,0);*/
     }
 
     public void SetVerts(float v0, float v1, float v2, float v3, float v4, float v5) {
@@ -178,9 +137,6 @@ public class Lines implements Geometrie{
     }
 
     public void setCoords(float[] coords) {
-        /*for(int i = 0; i < coords.length; i++) {
-            this.LineCoords[i] = coords[i];
-        }*/
         this.LineCoords = coords;
     }
 }

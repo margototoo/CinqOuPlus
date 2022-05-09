@@ -66,7 +66,7 @@ public class Plateau implements Geometrie{
             10.f,  10.0f, 0.0f
     };
 
-
+    //Coordonnées de la grille principale
     //float traitCoords[] = {
             /*-10.0f,   10.0f, 0.0f,
             -10.0f,  -10.0f, 0.0f,
@@ -167,10 +167,6 @@ public class Plateau implements Geometrie{
     @Override
     public float[] getPosition() {
         return this.Position;
-    }
-
-    public float[] getPlateauColors() {
-        return plateauColors;
     }
 
     public void draw(float[] mvpMatrix) {

@@ -65,7 +65,7 @@
             android:background="#11000000"
             android:paddingStart="24sp"
             android:paddingEnd="24sp"
-            android:text="Next to menu"
+            android:text="Retour au menu"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="@color/black"

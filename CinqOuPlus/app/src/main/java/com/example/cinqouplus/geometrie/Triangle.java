@@ -1,7 +1,6 @@
 package com.example.cinqouplus.geometrie;
 
 import android.opengl.GLES30;
-import android.util.Log;
 
 import com.example.cinqouplus.MyGLRenderer;
 
@@ -10,7 +9,6 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class Triangle implements Geometrie{
     /* Le vertex shader avec la définition de gl_Position et les variables utiles au fragment shader
@@ -97,6 +95,29 @@ public class Triangle implements Geometrie{
 
     private final float Position[] = {0.0f,0.0f};
 
+
+    public Triangle(float[] Pos, float[] coords, float red, float green, float blue) {
+
+        initTriangleCoords = coords;
+        triangleCoords = coords;
+
+        // positionnnement de la forme en fonction du paramètre du constructeur et de sa position initial
+        // avec le repère du milieu l'écran
+        Position[0] = Pos[0];
+        Position[1] = Pos[1];
+        for (int i = 0; i < triangleCoords.length-1; i+=3) {
+            triangleCoords[i] = initTriangleCoords[i] + Position[0];
+            triangleCoords[i+1] = initTriangleCoords[i+1] + Position[1];
+        }
+
+        // Mise en place de la couleur du Plateau (carré mais plus gros)
+        for (int i = 0; i < triangleColors.length-1; i+=4) {
+            triangleColors[i] = red;
+            triangleColors[i+1] = green;
+            triangleColors[i+2] = blue;
+        }
+    }
+
     public Triangle(float[] Pos, float red, float green, float blue) {
 
         // positionnnement de la forme en fonction du paramètre du constructeur et de sa position initial
@@ -122,7 +143,6 @@ public class Triangle implements Geometrie{
             triangleCoords[i] = initTriangleCoords[i] + pos[0];
             triangleCoords[i+1] = initTriangleCoords[i+1] + pos[1];
         }
-        Log.d("deplacement", "pos[0]= "+pos[0]+" ,pos[1]= "+pos[1]);
         Position[0]=pos[0];
         Position[1]=pos[1];
     }
@@ -132,45 +152,13 @@ public class Triangle implements Geometrie{
         return this.Position;
     }
 
-    /*@Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Triangle triangle = (Triangle) o;
-        //return IdProgram == triangle.IdProgram && IdPosition == triangle.IdPosition && IdCouleur == triangle.IdCouleur && IdMVPMatrix == triangle.IdMVPMatrix && vertexStride == triangle.vertexStride && couleurStride == triangle.couleurStride && Objects.equals(vertexShaderCode, triangle.vertexShaderCode) && Objects.equals(fragmentShaderCode, triangle.fragmentShaderCode) && Objects.equals(vertexBuffer, triangle.vertexBuffer) && Objects.equals(indiceBuffer, triangle.indiceBuffer) && Objects.equals(colorBuffer, triangle.colorBuffer) && Arrays.equals(linkStatus, triangle.linkStatus) && Arrays.equals(initTriangleCoords, triangle.initTriangleCoords) && Arrays.equals(triangleCoords, triangle.triangleCoords) && Arrays.equals(triangleColors, triangle.triangleColors) && Arrays.equals(Indices, triangle.Indices) && Arrays.equals(Position, triangle.Position);
-        return IdProgram == triangle.IdProgram && IdCouleur == triangle.IdCouleur && IdMVPMatrix == triangle.IdMVPMatrix && vertexStride == triangle.vertexStride && couleurStride == triangle.couleurStride && Objects.equals(vertexShaderCode, triangle.vertexShaderCode) && Objects.equals(fragmentShaderCode, triangle.fragmentShaderCode) && Objects.equals(vertexBuffer, triangle.vertexBuffer) && Objects.equals(indiceBuffer, triangle.indiceBuffer) && Objects.equals(colorBuffer, triangle.colorBuffer) && Arrays.equals(linkStatus, triangle.linkStatus) && Arrays.equals(initTriangleCoords, triangle.initTriangleCoords) && Arrays.equals(triangleCoords, triangle.triangleCoords) && Arrays.equals(triangleColors, triangle.triangleColors) && Arrays.equals(Indices, triangle.Indices);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(vertexShaderCode, fragmentShaderCode, vertexBuffer, indiceBuffer, colorBuffer, IdProgram, IdPosition, IdCouleur, IdMVPMatrix, vertexStride, couleurStride);
-        result = 31 * result + Arrays.hashCode(linkStatus);
-        result = 31 * result + Arrays.hashCode(initTriangleCoords);
-        result = 31 * result + Arrays.hashCode(triangleCoords);
-        result = 31 * result + Arrays.hashCode(triangleColors);
-        result = 31 * result + Arrays.hashCode(Indices);
-        return result;
-    }*/
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Triangle triangle = (Triangle) o;
-        Log.d("equals triangle", "Il se passe un truc par ici???");
         return Arrays.equals(initTriangleCoords, triangle.initTriangleCoords);
-        //return Float[].compare(triangleCoords, triangle.triangleCoords) == 0
-        //return Arrays.equals(initTriangleCoords, triangle.initTriangleCoords) && Arrays.equals(triangleCoords, triangle.triangleCoords) && Arrays.equals(triangleColors, triangle.triangleColors) && Arrays.equals(Indices, triangle.Indices);
     }
-
-    /*@Override
-    public int hashCode() {
-        int result = Arrays.hashCode(initTriangleCoords);
-        result = 31 * result + Arrays.hashCode(triangleCoords);
-        result = 31 * result + Arrays.hashCode(triangleColors);
-        result = 31 * result + Arrays.hashCode(Indices);
-        return result;
-    }*/
 
     public void draw(float[] mvpMatrix) {
         // initialisation du buffer pour les vertex (4 bytes par float)

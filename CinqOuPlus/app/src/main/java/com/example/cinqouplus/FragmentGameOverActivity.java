@@ -14,8 +14,7 @@ import androidx.fragment.app.DialogFragment;
 
 public class FragmentGameOverActivity extends DialogFragment {
 
-    private String time;
-    private String score;
+    private int score;
 
     @NonNull
     @Override
@@ -30,28 +29,17 @@ public class FragmentGameOverActivity extends DialogFragment {
         Dialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
 
-        // afficher le temps de jeu
-        TextView chronometer = (TextView) root.findViewById(R.id.chronometer);
-        chronometer.setText(this.time);
+        // afficher le score de jeu
+        TextView resultat = root.findViewById(R.id.score);
+        resultat.setText(this.score);
 
-        Button back = (Button) root.findViewById(R.id.button);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().finish();
-            }
-        });
+        Button back = root.findViewById(R.id.button);
+        back.setOnClickListener(v -> getActivity().finish());
 
         return dialog;
     }
 
-    public void setTime(int time) {
-        String secondes = Integer.toString(time % 60) + "s";
-        String minutes = (time / 60) % 60 == 0 ? "" : Integer.toString((time / 60) % 60) + "min ";
-        this.time = "Terminé en : " + minutes + secondes;
-    }
-
     public void setScore(int score) {
-
+        this.score = score;
     }
 }
